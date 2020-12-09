@@ -8,7 +8,7 @@ class Ex9 {
     @Test
     fun test() {
         val windowSize = 26
-        val number = (javaClass.classLoader.getResource("ex9.txt")?.readText() ?: "")
+        val number = (javaClass.classLoader.getResource("ex9.txt")!!.readText())
             .lines()
             .map { it.toLong() }
             .windowed(windowSize)
@@ -25,7 +25,7 @@ class Ex9 {
     @Test
     fun test2() {
         val windowSize = 26
-        val numbers = (javaClass.classLoader.getResource("ex9.txt")?.readText() ?: "")
+        val numbers = (javaClass.classLoader.getResource("ex9.txt")!!.readText())
             .lines()
             .map { it.toLong() }
         val number = numbers.windowed(windowSize)
