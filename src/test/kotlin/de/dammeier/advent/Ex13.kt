@@ -2,9 +2,6 @@ package de.dammeier.advent
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import kotlin.math.absoluteValue
-import kotlin.math.ceil
-import kotlin.math.floor
 
 class Ex13 {
 
@@ -30,25 +27,23 @@ class Ex13 {
             .lines()
         val restAndLines = busLinesStr
             .split(',')
-            .mapIndexed { index, s -> index to s }
+            .mapIndexed { index, s -> println(index to s);index to s }
             .filter { it.second != "x" }
-            .map { it.first to it.second.toLong() }
-        //val restAndLines = listOf(2L to 3L, 3L to 4L, 2L to 5L)
+            .map { it.first.toLong() to it.second.toLong() }
+            .map { toRemainderAndLane(it.first, it.second) }
         val kgv = restAndLines
             .map { it.second }
             .reduce { acc, l -> acc * l }
-        val es = restAndLines
-            .map { Triple(it.first, it.second, kgv / it.second) } // (a,m)  m ist b in euklidischen Algo
+        val chineseRestResult = restAndLines
+            .map { Triple(it.first, it.second, kgv / it.second) }
             .map { (rest, a, m) ->
                 val (one, s, t) = extendedEuclid(a, m)
-                println("$s*$a + $t*$m = $one also e=${m*t}")
+                println("$s*$a + $t*$m = $one also e=${m * t}")
                 m * t * rest
             }
-        val result = Math.floorMod(es.sum(), kgv)
-        assertTrue(100000000000000 < result, "$result is too low")
-        assertTrue(1103346296257602 > result, "$result is too high")
-        assertNotEquals(692754432903757, result)
-        assertEquals(1_373_887_808_004_411L, result)
+            .sum()
+        val result = Math.floorMod(chineseRestResult, kgv)
+        assertEquals(780_601_154_795_940L, result)
     }
 
     @Test
@@ -66,6 +61,14 @@ class Ex13 {
     private fun extendedEuclid(a: Long, b: Long): Triple<Long, Long, Long> {
         if (b == 0L) return Triple(a, 1, 0)
         val (ds, ss, ts) = extendedEuclid(b, Math.floorMod(a, b))
-        return Triple(ds, ts, ss - ts * (a/b))
+        return Triple(ds, ts, ss - ts * (a / b))
     }
+
+    private fun toRemainderAndLane(index: Long, lane: Long) =
+        when {
+            index == 0L -> Pair(index, lane)
+            index < lane -> Pair(lane - index, lane)
+            else -> Pair(lane - (index % lane), lane)
+        }
+
 }
