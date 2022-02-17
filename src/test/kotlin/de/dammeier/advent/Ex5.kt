@@ -18,13 +18,13 @@ class Ex5 {
             .map { (r, c) -> r.binarySeatSearch('F', rows) to c.binarySeatSearch('L', cols) }
             .map { (row, col) -> min(row.first, row.second) to min(col.first, col.second) }
             .map { (row, col) -> row * 8 + col }
-            .max()
+            .maxOrNull()!!
         assertEquals(908, maxId)
     }
 
     private fun String.binarySeatSearch(firstHalfIndicator: Char, max: Int) =
         this.fold(0 to max) { (start, end), rSide ->
-            val half = (end - start) / 2;
+            val half = (end - start) / 2
             if (rSide == firstHalfIndicator) {
                 start to (end - half)
             } else {

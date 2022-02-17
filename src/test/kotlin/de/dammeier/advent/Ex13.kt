@@ -14,7 +14,7 @@ class Ex13 {
             .map { it.toInt() }
         val startTime = startTimeStr.toInt()
         val result = busLines.map { it to (it - (startTime % it)) % it }
-            .minBy { (_, inMinutes) -> inMinutes }!!
+            .minByOrNull { (_, inMinutes) -> inMinutes }!!
             .let { println("$it");it.first * it.second }
 
         assertEquals(174, result)

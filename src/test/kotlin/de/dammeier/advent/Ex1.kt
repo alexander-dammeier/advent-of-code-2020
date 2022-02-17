@@ -1,13 +1,44 @@
 package de.dammeier.advent
 
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import kotlin.math.absoluteValue
 
 class Ex1 {
 
     @Test
-    fun test() {
+    fun testPart1() {
+        val ints = (javaClass.classLoader.getResource("ex1.txt")?.readText() ?: "")
+            .lines()
+            .map(String::toInt)
+            .sorted()
+
+        val intsReversed = ints.reversed()
+        val (solution, _) = ints.fold((null to intsReversed) as Pair<Pair<Int, Int>?, List<Int>>) {
+                (solution, rest), i ->
+            if (solution != null) {
+                solution to emptyList()
+            } else {
+                val neededSolution = 2020 - i
+                val newRest = rest.dropWhile { it > neededSolution }
+                val possibleSolution = newRest.firstOrNull()
+                if (possibleSolution == neededSolution) {
+                    i to possibleSolution to emptyList()
+                } else {
+                    null to newRest
+                }
+            }
+        }
+        assertNotNull(solution)
+        if (solution != null) {
+            assertEquals(2020, solution.first + solution.second)
+            assertEquals(485739, solution.first * solution.second)
+        }
+    }
+
+    @Test
+    fun testPart2() {
         val ints = (javaClass.classLoader.getResource("ex1.txt")?.readText() ?: "")
                 .lines()
                 .map(String::toInt)
