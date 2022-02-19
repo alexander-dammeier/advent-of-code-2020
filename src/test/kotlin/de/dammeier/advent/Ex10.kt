@@ -26,33 +26,28 @@ class Ex10 {
     fun test2() {
         val result = (javaClass.classLoader.getResource("ex10.txt")!!.readText())
             .lines()
-            .asSequence()
             .map { it.toLong() }
             .plus(0)
             .sorted()
-            .windowed(2)
-            .filter { it.size == 2 }
+            .windowed(2, partialWindows = false)
             .map { (i1, i2) -> i2 - i1 }
-            .linearPermutations()
+            .split { it == 3L }
+            .map { it.filter { i-> i != 3L } }
+            .map { group->
+                when (group) {
+                    listOf<Long>() -> 1L
+                    listOf(1L) -> 1L
+                    listOf(1L, 1L) -> 2L
+                    listOf(1L, 1L, 1L) -> 4L
+                    listOf(1L, 1L, 1L, 1L) -> 7L
+                    else -> {
+                        println(group); 1L
+                    }
+                }
+            }
+            .fold(1L) {acc, i -> acc*i }
 
         assertEquals(12_089_663_946_752L, result)
-    }
-
-    private tailrec fun Sequence<Long>.linearPermutations(multiplyBy: Long = 1L): Long {
-        if (this.none()) return multiplyBy
-        val until3 = this.takeWhile { it != 3L }
-        val size = until3.count()
-        val newMultiplier = when (val str = until3.toList()) {
-            listOf<Long>() -> 1
-            listOf(1L) -> 1
-            listOf(1L, 1L) -> 2
-            listOf(1L, 1L, 1L) -> 4
-            listOf(1L, 1L, 1L, 1L) -> 7
-            else -> {
-                println(str); 1
-            }
-        }
-        return this.drop(size + 1).linearPermutations(newMultiplier * multiplyBy)
     }
 
 }
