@@ -20,7 +20,7 @@ class Ex3 {
                     acc
                 }
             }
-        assertEquals(299, toEncounter)
+        assertEquals(250, toEncounter)
     }
 
     @Test
@@ -45,6 +45,6 @@ class Ex3 {
             }
             .fold(1L) {acc, v -> acc*v }
 
-        assertEquals(3621285278, toEncounter)
+        assertEquals(1592662500, toEncounter)
     }
 }

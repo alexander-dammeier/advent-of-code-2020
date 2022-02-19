@@ -3,6 +3,8 @@ package de.dammeier.advent
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
+import java.nio.file.Files
+import java.nio.file.Path
 import kotlin.math.absoluteValue
 
 class Ex1 {
@@ -61,5 +63,15 @@ class Ex1 {
                 .first()
         val result = r1 * r2 * r3
         assertEquals(161109702, result)
+    }
+
+    @Test
+    fun generateTestData() {
+        val ints = (javaClass.classLoader.getResource("ex1.txt")?.readText() ?: "")
+            .lines()
+            .map(String::toInt) + (2021 until 100_000)
+        val shuffled = ints.shuffled()
+        val file = Files.createFile(Path.of("generatedNumbers.txt"))
+        Files.write(file, shuffled.map { it.toString() })
     }
 }
